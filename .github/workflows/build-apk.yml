@@ -9,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout Source Code
@@ -28,11 +26,11 @@ jobs:
       - name: Build Web App
         run: npm run build
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -44,27 +42,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug > ../gradle_build.log 2>&1 || touch ../gradle_failed.txt
-
-      - name: Push Logs to GitHub
-        if: always()
-        run: |
-          git config --global user.name "Github Actions"
-          git config --global user.email "actions@github.com"
-          git checkout -b debug-logs || git checkout debug-logs
-          echo "=== GRADLE BUILD LOG ===" > report.txt
-          cat gradle_build.log >> report.txt || echo "No gradle_build.log" >> report.txt
-          git add report.txt
-          git add -f gradle_build.log || true
-          git commit -m "ci: save build logs"
-          git push -f origin debug-logs
-
-      - name: Verify Build Success
-        run: |
-          if [ -f gradle_failed.txt ]; then
-            echo "Gradle build failed! See gradle_build.log on the debug-logs branch."
-            exit 1
-          fi
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
