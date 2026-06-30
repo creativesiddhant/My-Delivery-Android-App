@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">My Delivery App</string>
+    <string name="title_activity_main">My Delivery App</string>
+    <string name="package_name">com.creativesiddhant.mydeliveryapp</string>
+    <string name="custom_url_scheme">com.creativesiddhant.mydeliveryapp</string>
+</resources>
