@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Source Code
@@ -24,7 +26,8 @@ jobs:
         run: npm ci
 
       - name: Build Web App
-        run: npm run build
+        run: |
+          npm run build > build.log 2>&1 || touch build_failed.txt
 
       - name: Debug Workspace files
         run: |
@@ -43,10 +46,37 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Capacitor Doctor
-        run: npx cap doctor
+        run: |
+          npx cap doctor > doctor.log 2>&1 || touch doctor_failed.txt
 
       - name: Sync Capacitor
-        run: npx cap sync android --verbose
+        run: |
+          npx cap sync android --verbose > sync.log 2>&1 || touch sync_failed.txt
+
+      - name: Push Logs to GitHub
+        if: always()
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "actions@github.com"
+          git checkout -b debug-logs || git checkout debug-logs
+          git add build.log doctor.log sync.log || true
+          git add build_failed.txt doctor_failed.txt sync_failed.txt || true
+          git commit -m "ci: save build logs" || true
+          git push -f origin debug-logs
+
+      - name: Verify Build Steps Success
+        run: |
+          if [ -f build_failed.txt ]; then
+            echo "Build Web App failed! See build.log on the debug-logs branch."
+            exit 1
+          fi
+          if [ -f doctor_failed.txt ]; then
+            echo "Capacitor Doctor failed! See doctor.log on the debug-logs branch."
+          fi
+          if [ -f sync_failed.txt ]; then
+            echo "Capacitor Sync failed! See sync.log on the debug-logs branch."
+            exit 1
+          fi
 
       - name: Build Android APK
         run: |
