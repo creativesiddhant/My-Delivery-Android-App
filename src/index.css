@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+/**
+ * index.css - Styling Foundation & Design Tokens
+ * 
+ * Implements Material Design 3 tokens:
+ * - Curated HSL color palette allowing dynamic overlay styles
+ * - Soft elevation shadow scales
+ * - Custom responsive Android phone mock frame (Google Pixel simulation)
+ * - Transitions, ripple states, and mobile-responsive overlays
+ */
+
+:root {
+  /* MD3 Color Palette - Light Mode */
+  --md-sys-color-primary: hsl(24, 100%, 50%);         /* Food Orange */
+  --md-sys-color-on-primary: hsl(0, 0%, 100%);
+  --md-sys-color-primary-container: hsl(24, 100%, 94%);
+  --md-sys-color-on-primary-container: hsl(24, 100%, 20%);
+  
+  --md-sys-color-secondary: hsl(142, 70%, 29%);       /* Grocery Green */
+  --md-sys-color-on-secondary: hsl(0, 0%, 100%);
+  --md-sys-color-secondary-container: hsl(142, 70%, 94%);
+  --md-sys-color-on-secondary-container: hsl(142, 70%, 10%);
+
+  --md-sys-color-tertiary: hsl(205, 100%, 40%);        /* Pharmacy Blue */
+  --md-sys-color-on-tertiary: hsl(0, 0%, 100%);
+  --md-sys-color-tertiary-container: hsl(205, 100%, 95%);
+  --md-sys-color-on-tertiary-container: hsl(205, 100%, 12%);
+
+  --md-sys-color-background: hsl(240, 15%, 98%);
+  --md-sys-color-on-background: hsl(240, 10%, 10%);
+  
+  --md-sys-color-surface: hsl(0, 0%, 100%);
+  --md-sys-color-on-surface: hsl(240, 10%, 12%);
+  --md-sys-color-surface-variant: hsl(240, 5%, 93%);
+  --md-sys-color-on-surface-variant: hsl(240, 5%, 35%);
+  
+  --md-sys-color-outline: hsl(240, 5%, 82%);
+  --md-sys-color-error: hsl(0, 85%, 45%);
+  --md-sys-color-on-error: hsl(0, 0%, 100%);
+
+  /* Elevation Shadows */
+  --elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+  --elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+  --elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.06);
+  --elevation-4: 0px 6px 12px 4px rgba(0, 0, 0, 0.14), 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
+
+  /* Fonts */
+  --font-family-title: 'Plus Jakarta Sans', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+
+  /* Shell background helper (desktop layout outer bg) */
+  --color-page-bg: #eceef4;
+}
+
+/* Dark Mode Variables Override */
+.dark-theme {
+  --md-sys-color-primary: hsl(24, 100%, 55%);
+  --md-sys-color-on-primary: hsl(0, 0%, 0%);
+  --md-sys-color-primary-container: hsl(24, 60%, 20%);
+  --md-sys-color-on-primary-container: hsl(24, 100%, 85%);
+
+  --md-sys-color-secondary: hsl(142, 60%, 45%);
+  --md-sys-color-on-secondary: hsl(0, 0%, 0%);
+  --md-sys-color-secondary-container: hsl(142, 50%, 16%);
+  --md-sys-color-on-secondary-container: hsl(142, 70%, 80%);
+
+  --md-sys-color-tertiary: hsl(205, 100%, 65%);
+  --md-sys-color-on-tertiary: hsl(0, 0%, 0%);
+  --md-sys-color-tertiary-container: hsl(205, 60%, 18%);
+  --md-sys-color-on-tertiary-container: hsl(205, 100%, 85%);
+
+  --md-sys-color-background: #0f1013;
+  --md-sys-color-on-background: #e3e3e7;
+  
+  --md-sys-color-surface: #17181c;
+  --md-sys-color-on-surface: #f1f1f5;
+  --md-sys-color-surface-variant: #26272c;
+  --md-sys-color-on-surface-variant: #a5a6ad;
+  
+  --md-sys-color-outline: #3c3d44;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+
+  --color-page-bg: #07080a;
+}
+
+/* Core Settings */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family-body);
+  background-color: var(--color-page-bg);
+  color: var(--md-sys-color-on-background);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* Scrollbar styling inside Android screen */
+.android-screen-content::-webkit-scrollbar {
+  width: 4px;
+}
+.android-screen-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.android-screen-content::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-outline);
+  border-radius: 4px;
+}
+
+/* Typographic Defaults */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-family-title);
+  color: var(--md-sys-color-on-background);
+  font-weight: 700;
+}
+
+/* Desktop Android Device Framing wrapper */
+.android-frame-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 0;
+  background-color: var(--color-page-bg);
+  transition: background-color 0.3s ease;
+}
+
+.android-device {
+  width: 412px;
+  height: 880px;
+  border-radius: 42px;
+  border: 10px solid #1f1f23;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--md-sys-color-background);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Status Bar */
+.android-status-bar {
+  height: 48px;
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px 0 24px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 10;
+  user-select: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-bar-icons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Dynamic Camera Notch */
+.android-camera-notch {
+  width: 90px;
+  height: 24px;
+  background-color: #000;
+  border-radius: 12px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+}
+
+/* Screen Core Viewport */
+.android-screen-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--md-sys-color-background);
+  transition: background-color 0.3s ease;
+}
+
+/* Android Gesture Pills Bar */
+.android-gesture-bar {
+  height: 20px;
+  background-color: var(--md-sys-color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 6px;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.android-gesture-pill {
+  width: 100px;
+  height: 4px;
+  background-color: var(--md-sys-color-on-background);
+  opacity: 0.8;
+  border-radius: 100px;
+  transition: background-color 0.3s ease;
+}
+
+/* Active Screen Transitions */
+.screen-transition-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  animation: slideIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro animations / standard effects */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple:active::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: inherit;
+  animation: rippleAnim 0.3s ease-out;
+}
+
+@keyframes rippleAnim {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Premium Glassmorphic details */
+.glassmorphic {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dark-theme .glassmorphic {
+  background: rgba(23, 24, 28, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Card Elevations Utility classes */
+.card-elevation-1 { box-shadow: var(--elevation-1); }
+.card-elevation-2 { box-shadow: var(--elevation-2); }
+.card-elevation-3 { box-shadow: var(--elevation-3); }
+
+/* Responsive adjustments - If size falls under 480px, it fits mobile device full size */
+@media (max-width: 480px) {
+  body {
+    background-color: var(--md-sys-color-background);
+  }
+  .android-frame-wrapper {
+    padding: 0;
+  }
+  .android-device {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .android-camera-notch {
+    display: none;
+  }
+  .android-status-bar {
+    padding-top: 6px;
+    height: 38px;
+  }
+}
