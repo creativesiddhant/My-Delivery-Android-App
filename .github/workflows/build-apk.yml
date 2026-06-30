@@ -59,9 +59,16 @@ jobs:
           git config --global user.name "Github Actions"
           git config --global user.email "actions@github.com"
           git checkout -b debug-logs || git checkout debug-logs
-          git add build.log doctor.log sync.log || true
+          echo "=== BUILD LOG ===" > report.txt
+          cat build.log >> report.txt || echo "No build.log" >> report.txt
+          echo "=== DOCTOR LOG ===" >> report.txt
+          cat doctor.log >> report.txt || echo "No doctor.log" >> report.txt
+          echo "=== SYNC LOG ===" >> report.txt
+          cat sync.log >> report.txt || echo "No sync.log" >> report.txt
+          git add report.txt
+          git add -f build.log doctor.log sync.log || true
           git add build_failed.txt doctor_failed.txt sync_failed.txt || true
-          git commit -m "ci: save build logs" || true
+          git commit -m "ci: save build logs"
           git push -f origin debug-logs
 
       - name: Verify Build Steps Success
