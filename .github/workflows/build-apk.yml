@@ -9,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout Source Code
@@ -19,22 +17,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci
 
       - name: Build Web App
-        run: |
-          npm run build > build.log 2>&1 || touch build_failed.txt
-
-      - name: Debug Workspace files
-        run: |
-          echo "=== Root Files ==="
-          ls -la
-          echo "=== Check dist folder ==="
-          ls -la dist || echo "dist folder not found"
+        run: npm run build
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -45,45 +35,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Capacitor Doctor
-        run: |
-          npx cap doctor > doctor.log 2>&1 || touch doctor_failed.txt
-
       - name: Sync Capacitor
-        run: |
-          npx cap sync android --verbose > sync.log 2>&1 || touch sync_failed.txt
-
-      - name: Push Logs to GitHub
-        if: always()
-        run: |
-          git config --global user.name "Github Actions"
-          git config --global user.email "actions@github.com"
-          git checkout -b debug-logs || git checkout debug-logs
-          echo "=== BUILD LOG ===" > report.txt
-          cat build.log >> report.txt || echo "No build.log" >> report.txt
-          echo "=== DOCTOR LOG ===" >> report.txt
-          cat doctor.log >> report.txt || echo "No doctor.log" >> report.txt
-          echo "=== SYNC LOG ===" >> report.txt
-          cat sync.log >> report.txt || echo "No sync.log" >> report.txt
-          git add report.txt
-          git add -f build.log doctor.log sync.log || true
-          git add build_failed.txt doctor_failed.txt sync_failed.txt || true
-          git commit -m "ci: save build logs"
-          git push -f origin debug-logs
-
-      - name: Verify Build Steps Success
-        run: |
-          if [ -f build_failed.txt ]; then
-            echo "Build Web App failed! See build.log on the debug-logs branch."
-            exit 1
-          fi
-          if [ -f doctor_failed.txt ]; then
-            echo "Capacitor Doctor failed! See doctor.log on the debug-logs branch."
-          fi
-          if [ -f sync_failed.txt ]; then
-            echo "Capacitor Sync failed! See sync.log on the debug-logs branch."
-            exit 1
-          fi
+        run: npx cap sync android
 
       - name: Build Android APK
         run: |
